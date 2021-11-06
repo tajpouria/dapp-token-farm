@@ -1,0 +1,27 @@
+{
+  "name": "token-farm",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tajpouria/dapp-token-farm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tajpouria/dapp-token-farm/issues"
+  },
+  "homepage": "https://github.com/tajpouria/dapp-token-farm#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^9.1.3"
+  }
+}
