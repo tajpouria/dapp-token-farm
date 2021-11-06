@@ -39,9 +39,54 @@ contract("TokenFarm", ([owner, investor]) => {
       assert.equal(name, "Dapp Token Farm");
     });
 
-    it("balance has tokens", async () => {
+    it("contract has tokens", async () => {
       const balance = await dappToken.balanceOf(tokenFarm.address);
       assert.equal(balance.toString(), web3.utils.toWei("1000000", "ether"));
+    });
+  });
+
+  describe("Farming Token", () => {
+    it("reward investor for staking mDai token", async () => {
+      let result;
+
+      result = await daiToken.balanceOf(investor);
+      assert(
+        result.toString(),
+        web3.utils.toWei("100", "ether"),
+        "investor initial mDai balance must be correct",
+      );
+
+      await daiToken.approve(
+        tokenFarm.address,
+        web3.utils.toWei("100", "ether"),
+        {
+          from: investor,
+        },
+      );
+      await tokenFarm.stakeDaiTokens(web3.utils.toWei("100", "ether"), {
+        from: investor,
+      });
+
+      result = await daiToken.balanceOf(investor);
+      assert(
+        result,
+        web3.utils.toWei("0", "ether"),
+        "investor mDai balance after staking must be correct",
+      );
+
+      result = await tokenFarm.stakingBalance(investor);
+      assert(
+        result,
+        web3.utils.toWei("100", "ether"),
+        "investor Token Farm after staking must be correct",
+      );
+
+      result = await tokenFarm.isStaking(investor);
+      assert(
+        result,
+        true,
+        "investor staking status after staking must be correct",
+      );
     });
   });
 });
