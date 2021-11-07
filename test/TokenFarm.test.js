@@ -63,6 +63,7 @@ contract("TokenFarm", ([owner, investor]) => {
           from: investor,
         },
       );
+      await tokenFarm.stakeDaiTokens(0, { from: investor }).should.be.rejected;
       await tokenFarm.stakeDaiTokens(web3.utils.toWei("100", "ether"), {
         from: investor,
       });
@@ -87,6 +88,35 @@ contract("TokenFarm", ([owner, investor]) => {
         true,
         "investor staking status after staking must be correct",
       );
+
+      await tokenFarm.issueDappTokens({ from: investor }).should.be.rejected;
+
+      await tokenFarm.issueDappTokens({ from: owner });
+      result = await dappToken.balanceOf(investor);
+      assert.equal(
+        result,
+        web3.utils.toWei("100", "ether"),
+        "investor's Dapp Token interest balance must be correct after issuance",
+      );
+    });
+  });
+
+  describe("Harvesting Token", () => {
+    it("change staking statuses after unStaking", async () => {
+      await tokenFarm.unstakeDaiTokens({ from: owner }).should.be.rejected;
+
+      let result;
+
+      await tokenFarm.unstakeDaiTokens({ from: investor });
+      result = await tokenFarm.stakingBalance(investor);
+      assert.equal(
+        result,
+        web3.utils.toWei("0", "ether"),
+        "staker balance must be 0 after unStaking",
+      );
+
+      result = await tokenFarm.isStaking(investor);
+      expect(result, false, "is staking status must be false after unStaking");
     });
   });
 });
